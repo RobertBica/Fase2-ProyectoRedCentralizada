@@ -1,0 +1,5 @@
+Name:Path:Description:Category:Scope
+HLP-GG-Prensa:OU=Usuarios-Prensa,OU=Dep-Prensa,dc=hospitallaplana,dc=mylocal:Grupo global de seguridad del Dep. Prensa:Security:Global
+HLP-GG-Enfermeria:OU=Usuarios-Enfermeria,OU=Dep-Enfermeria,dc=hospitallaplana,dc=mylocal:Grupo global de seguridad del Dep. Enfermeria:Security:Global
+HLP-GG-Informatica:OU=Usuarios-Informatica,OU=Dep-Informatica,dc=hospitallaplana,dc=mylocal:Grupo global de seguridad del Dep. Informatica:Security:Global
+HLP-GG-Formacion:OU=Usuarios-Formacion,OU=Dep-Formacion,dc=hospitallaplana,dc=mylocal:Grupo global de seguridad del Dep. Formacion e Investigacion:Security:Global

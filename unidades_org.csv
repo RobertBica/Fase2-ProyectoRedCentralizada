@@ -1,0 +1,13 @@
+Name:Description:Path
+Dep-Prensa:UO Departamento de Prensa:dc=hospitallaplana,dc=mylocal
+Equipos-Prensa:UO Equipos Dep. Prensa:OU=Dep-Prensa,dc=hospitallaplana,dc=mylocal
+Usuarios-Prensa:UO Usuarios Dep. Prensa:OU=Dep-Prensa,dc=hospitallaplana,dc=mylocal
+Dep-Enfermeria:UO Departamento de Enfermeria:dc=hospitallaplana,dc=mylocal
+Equipos-Enfermeria:UO Equipos Dep. Enfermeria:OU=Dep-Enfermeria,dc=hospitallaplana,dc=mylocal
+Usuarios-Enfermeria:UO Usuarios Dep. Enfermeria:OU=Dep-Enfermeria,dc=hospitallaplana,dc=mylocal
+Dep-Informatica:UO Departamento de Informatica:dc=hospitallaplana,dc=mylocal
+Equipos-Informatica:UO Equipos Dep. Informatica:OU=Dep-Informatica,dc=hospitallaplana,dc=mylocal
+Usuarios-Informatica:UO Usuarios Dep. Informatica:OU=Dep-Informatica,dc=hospitallaplana,dc=mylocal
+Dep-Formacion:UO Departamento de Formacion e Investigacion:dc=hospitallaplana,dc=mylocal
+Equipos-Formacion:UO Equipos Dep. Formacion:OU=Dep-Formacion,dc=hospitallaplana,dc=mylocal
+Usuarios-Formacion:UO Usuarios Dep. Formacion:OU=Dep-Formacion,dc=hospitallaplana,dc=mylocal
