@@ -4,7 +4,8 @@ Proyecto de Red Centralizada — Administración de Active Directory con PowerSh
 Módulo: Sistemas Informáticos | Dominio: hospitallaplana.mylocal
 
 Descripción
-Este repositorio contiene los scripts de PowerShell y los ficheros CSV necesarios para desplegar de forma desatendida la estructura de objetos del dominio del Hospital La Plana en un servidor Windows Server con Active Directory.
+Este repositorio contiene los scripts de PowerShell y los ficheros CSV necesarios para desplegar la estructura de objetos del dominio del Hospital La Plana en un servidor Windows Server con Active Directory.
+
 La estructura incluye la creación automática de:
 
 Unidades Organizativas (OUs)
