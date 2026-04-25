@@ -28,6 +28,7 @@ function Show-Menu
     Write-Host ""
     Write-Host "  1: Crear estructura del subsistema (UOs, Grupos, Equipos y Usuarios)"
     Write-Host "  2: Consultar todos los objetos del dominio"
+    Write-Host "  3: Eliminar toda la estructura del subsistema"
     Write-Host "  Q: Salir"
     Write-Host ""
     Write-Host "=================================================" -ForegroundColor Blue
@@ -252,8 +253,101 @@ function consultar_Objetos
 }
 
 # ============================================================
-# MENU PRINCIPAL
+# FUNCION: Eliminar toda la estructura del dominio
 # ============================================================
+function eliminar_Estructura
+{
+    Write-Host ""
+    Write-Host "⚠️  ATENCION: Esta accion eliminara TODOS los objetos creados." -ForegroundColor Red
+    Write-Host "     Usuarios, Grupos, Equipos y Unidades Organizativas." -ForegroundColor Red
+    Write-Host ""
+    $confirmacion = Read-Host "¿Estas seguro? Escribe 'SI' para confirmar"
+
+    if ($confirmacion -ne "SI")
+    {
+        Write-Host "Operacion cancelada." -ForegroundColor Yellow
+        return
+    }
+
+    Write-Host ""
+    Write-Host "--- Eliminando Usuarios ---" -ForegroundColor Cyan
+    $usuarios = Get-ADUser -Filter * -SearchBase "dc=hospitallaplana,dc=mylocal" |
+        Where-Object { $_.DistinguishedName -notlike "*CN=Administrator*" -and
+                       $_.DistinguishedName -notlike "*CN=Guest*" -and
+                       $_.DistinguishedName -notlike "*CN=krbtgt*" }
+    foreach ($u in $usuarios)
+    {
+        try
+        {
+            Remove-ADUser -Identity $u -Confirm:$false
+            Write-Host "  [-] Usuario eliminado: $($u.SamAccountName)" -ForegroundColor Green
+        }
+        catch { Write-Host "  [!] Error eliminando usuario $($u.SamAccountName): $($_.Exception.Message)" -ForegroundColor Red }
+    }
+
+    Write-Host ""
+    Write-Host "--- Eliminando Equipos ---" -ForegroundColor Cyan
+    $equipos = Get-ADComputer -Filter * -SearchBase "dc=hospitallaplana,dc=mylocal" |
+        Where-Object { $_.Name -notlike "*SERVER*" -and $_.Name -notlike "*DC*" }
+    foreach ($eq in $equipos)
+    {
+        try
+        {
+            Remove-ADComputer -Identity $eq -Confirm:$false
+            Write-Host "  [-] Equipo eliminado: $($eq.Name)" -ForegroundColor Green
+        }
+        catch { Write-Host "  [!] Error eliminando equipo $($eq.Name): $($_.Exception.Message)" -ForegroundColor Red }
+    }
+
+    Write-Host ""
+    Write-Host "--- Eliminando Grupos ---" -ForegroundColor Cyan
+    $grupos = Get-ADGroup -Filter * -SearchBase "dc=hospitallaplana,dc=mylocal" |
+        Where-Object { $_.Name -like "HLP-GG-*" }
+    foreach ($g in $grupos)
+    {
+        try
+        {
+            Remove-ADGroup -Identity $g -Confirm:$false
+            Write-Host "  [-] Grupo eliminado: $($g.Name)" -ForegroundColor Green
+        }
+        catch { Write-Host "  [!] Error eliminando grupo $($g.Name): $($_.Exception.Message)" -ForegroundColor Red }
+    }
+
+    Write-Host ""
+    Write-Host "--- Eliminando Unidades Organizativas ---" -ForegroundColor Cyan
+    
+    $ouHijas = @(
+        "OU=Equipos-Prensa,OU=Dep-Prensa,dc=hospitallaplana,dc=mylocal",
+        "OU=Usuarios-Prensa,OU=Dep-Prensa,dc=hospitallaplana,dc=mylocal",
+        "OU=Equipos-Enfermeria,OU=Dep-Enfermeria,dc=hospitallaplana,dc=mylocal",
+        "OU=Usuarios-Enfermeria,OU=Dep-Enfermeria,dc=hospitallaplana,dc=mylocal",
+        "OU=Equipos-Informatica,OU=Dep-Informatica,dc=hospitallaplana,dc=mylocal",
+        "OU=Usuarios-Informatica,OU=Dep-Informatica,dc=hospitallaplana,dc=mylocal",
+        "OU=Equipos-Formacion,OU=Dep-Formacion,dc=hospitallaplana,dc=mylocal",
+        "OU=Usuarios-Formacion,OU=Dep-Formacion,dc=hospitallaplana,dc=mylocal"
+    )
+    $ouPadre = @(
+        "OU=Dep-Prensa,dc=hospitallaplana,dc=mylocal",
+        "OU=Dep-Enfermeria,dc=hospitallaplana,dc=mylocal",
+        "OU=Dep-Informatica,dc=hospitallaplana,dc=mylocal",
+        "OU=Dep-Formacion,dc=hospitallaplana,dc=mylocal"
+    )
+    foreach ($ou in ($ouHijas + $ouPadre))
+    {
+        try
+        {
+            Set-ADOrganizationalUnit -Identity $ou -ProtectedFromAccidentalDeletion $false
+            Remove-ADOrganizationalUnit -Identity $ou -Confirm:$false
+            Write-Host "  [-] OU eliminada: $ou" -ForegroundColor Green
+        }
+        catch { Write-Host "  [!] Error eliminando OU: $($_.Exception.Message)" -ForegroundColor Red }
+    }
+
+    Write-Host ""
+    Write-Host "=== Estructura eliminada correctamente ===" -ForegroundColor Magenta
+}
+
+
 do
 {
     Show-Menu
@@ -268,6 +362,10 @@ do
         '2' {
             Clear-Host
             consultar_Objetos
+        }
+        '3' {
+            Clear-Host
+            eliminar_Estructura
         }
         'q' {
             Write-Host ""
